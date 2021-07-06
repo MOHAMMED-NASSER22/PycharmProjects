@@ -93,7 +93,7 @@ import pickle
 
 
 # to read
-with open('your_file.txt', 'rb') as file:
+with open('EncodingImage.txt', 'rb') as file:
     Outlist = pickle.load(file)
 
 
@@ -103,7 +103,7 @@ if len(Names) != len(Outlist):
     print("Don't worry  it will load faster next time")
     Outlist = findEncoding(images)
     #to write
-    with open('your_file.txt', 'wb') as file:
+    with open('EncodingImage.txt', 'wb') as file:
         pickle.dump(Outlist, file)
 
 
