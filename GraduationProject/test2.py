@@ -4,7 +4,7 @@ with open('EncodingImage.txt', 'rb') as file:
     Outlist = pickle.load(file)
 # print(Outlist[0])
 
-target = Outlist[5]
+target = Outlist
 
 import cv2
 import numpy as np
@@ -35,8 +35,8 @@ faceLocTest = face_recognition.face_locations(imgTest)[0]
 encodeTest = face_recognition.face_encodings(imgTest)[0]
 cv2.rectangle(imgTest, (faceLocTest[3], faceLocTest[0]), (faceLocTest[1], faceLocTest[2]), (255, 0, 255), 2)
 
-result = face_recognition.compare_faces([encodeElon], target)
-faceDis = face_recognition.face_distance([encodeElon], target)
+result = face_recognition.compare_faces([encodeElon], encodeTest)
+faceDis = face_recognition.face_distance([encodeElon], encodeTest)
 print(result, faceDis)
 cv2.putText(imgTest, f'{result} {round(faceDis[0], 2)}', (50, 50), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), 2)
 
