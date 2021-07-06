@@ -2,19 +2,16 @@ import cv2
 import numpy as np
 import face_recognition
 import os
-from datetime import datetime
 import threading
 import time
-import multiprocessing
-import concurrent.futures
-import multiprocessing
 
 print("reading ImageAt...")
 path = 'ImageAt'
 images = []
 Names = []
 cap = cv2.VideoCapture(0)
-
+_, img = cap.read()
+_, imgS = cap.read()
 
 def LoadImages():
     myList = os.listdir(path)
@@ -38,7 +35,7 @@ def findEncoding(images):
 def show():
     while True:
         _, img1 = cap.read()
-        cv2.imshow("show", img1)
+        cv2.imshow("LiveFeed", img1)
         if cv2.waitKey(10) & 0xFF == ord('s'):
             break
 
@@ -90,39 +87,26 @@ def faceRecognition():
 start = time.perf_counter()
 LoadImages()
 print('start encoding... ')
-# saved = findEncoding(images)
-
-
-# with open("EncodingData.txt", 'w') as f:
-#     for s in encodeListKnown:
-#         f.write(str(s) + '\n')
-
-
-# with open("EncodingData.txt", 'r') as f:
-#
-#     # saved = [line.rstrip('\n') for line in f ]
-#     i=0
-#     for line in f:
-#         saved[i] = line
-#         if line.endswith(']'):
-#             i=i+1
-#             break
 
 import pickle
 
-# To save
-# To write
 
 
 # to read
 with open('your_file.txt', 'rb') as file:
     Outlist = pickle.load(file)
 
+
 if len(Names) != len(Outlist):
+    print("It seems that you added or removed an image  ")
+    print("Begin start new encoding... ,  it will take awhile ")
+    print("Don't worry  it will load faster next time")
     Outlist = findEncoding(images)
-    # #to write
+    #to write
     with open('your_file.txt', 'wb') as file:
         pickle.dump(Outlist, file)
+
+
 print(len(Names))
 print(len(Outlist))
 
@@ -130,8 +114,10 @@ finish = time.perf_counter()
 print('encoding complete....')
 print(f'Finished in {round(finish - start, 2)} second(s)')
 # faceRecognition()
+
 t1 = threading.Thread(target=show)
 t2 = threading.Thread(target=faceRecognition)
+
 t1.start()
 t2.start()
 
