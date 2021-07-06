@@ -12,6 +12,8 @@ Names = []
 cap = cv2.VideoCapture(0)
 _, img = cap.read()
 _, imgS = cap.read()
+_, img = cap.read()
+_, imgS = cap.read()
 
 def LoadImages():
     myList = os.listdir(path)
@@ -57,9 +59,9 @@ def faceRecognition():
             faceDis = face_recognition.face_distance(Outlist, encodeFace)
             # print(faceDis)
             matchIndex = np.argmin(faceDis)
-            nameFlag = False
+            nameFlag = False  # there is no known face
             if matches[matchIndex]:
-                nameFlag = True
+                nameFlag = True # there is known face
                 name = Names[matchIndex].upper()
                 print(name)
                 y1, x2, y2, x1 = faceLoc
@@ -80,7 +82,10 @@ def faceRecognition():
                 # cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
                 cv2.putText(img, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_SIMPLEX, .9, (255, 255, 255), 2)
             if nameFlag:
-                print(faceLoc)
+                # print(faceLoc)
+                X_Center = (x1+x2)/2
+                Y_Center = (y1+y2)/2
+                print( " X_Center :  " + str(X_Center) +  "  Y_Center :  "  + str(Y_Center))
         cv2.imshow('faceRecognition', img)
         if cv2.waitKey(1) & 0xFF == ord('f'):
             break

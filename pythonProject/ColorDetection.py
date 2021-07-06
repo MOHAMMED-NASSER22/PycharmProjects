@@ -1,5 +1,7 @@
 import cv2
 import numpy as np
+import time
+
 
 def empty(a):
     pass
@@ -35,8 +37,12 @@ def stackImages(scale,imgArray):
         ver = hor
     return ver
 
+cap = cv2.VideoCapture(0)
 
-path = "D:\lambo.jpg"
+_, img = cap.read()
+time.sleep(1)
+_, img = cap.read()
+# path = "D:\Screenshot_1.png"
 cv2.namedWindow("TrackBars")
 cv2.resizeWindow("TrackBars", 640, 320)
 cv2.createTrackbar("Hue Min", "TrackBars", 0, 179, empty)
@@ -47,8 +53,9 @@ cv2.createTrackbar("val Min", "TrackBars", 150, 255, empty)
 cv2.createTrackbar("val Max", "TrackBars", 255, 255, empty)
 
 while True:
-    img = cv2.imread(path)
-    imgHSV = cv2.cvtColor(img, cv2.COLOR_RGB2HSV)
+    # img = cv2.imread(path)
+
+    imgHSV = cv2.cvtColor(img, cv2.COLOR_BGR2HSV)
     h_min = cv2.getTrackbarPos("Hue Min", "TrackBars")
     h_max = cv2.getTrackbarPos("Hue Max", "TrackBars")
     s_min = cv2.getTrackbarPos("sat Min", "TrackBars")
@@ -59,6 +66,8 @@ while True:
     lower = np.array([h_min, s_min, v_min])
     upper = np.array([h_max, s_max, v_max])
     mask = cv2.inRange(imgHSV, lower, upper)
+    contours, _ = cv2.findContours(mask, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
+    contours = sorted(contours, key=lambda x: cv2.contourArea(x), reverse=True)
     imgResult = cv2.bitwise_and(img,img,mask=mask)
 
     # cv2.imshow("orgin", img)
