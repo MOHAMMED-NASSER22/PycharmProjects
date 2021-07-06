@@ -16,7 +16,6 @@ Names = []
 cap = cv2.VideoCapture(0)
 
 
-
 def LoadImages():
     myList = os.listdir(path)
     print(myList)
@@ -25,14 +24,6 @@ def LoadImages():
         images.append(curImg)
         Names.append(os.path.splitext(cl)[0])
     print(Names)
-
-
-def show():
-    while True:
-        _, img1 = cap.read()
-        cv2.imshow("show", img1)
-        if cv2.waitKey(10) & 0xFF == ord('s'):
-            break
 
 
 def findEncoding(images):
@@ -44,11 +35,19 @@ def findEncoding(images):
     return encodeList
 
 
+def show():
+    while True:
+        _, img1 = cap.read()
+        cv2.imshow("show", img1)
+        if cv2.waitKey(10) & 0xFF == ord('s'):
+            break
+
+
 def faceRecognition():
     while True:
         time.sleep(1)
         _, img = cap.read()
-        _ , imgS = cap.read()
+        _, imgS = cap.read()
         # imgS = cv2.resize(img, (0, 0), None, 0.25, 0.25)
         # imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2GRAY)
         imgS = cv2.cvtColor(imgS, cv2.COLOR_BGR2RGB)
@@ -57,29 +56,32 @@ def faceRecognition():
         encodesCurFrame = face_recognition.face_encodings(imgS, facesCurFrame)
 
         for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
-            matches = face_recognition.compare_faces(encodeListKnown, encodeFace)
-            faceDis = face_recognition.face_distance(encodeListKnown, encodeFace)
+            matches = face_recognition.compare_faces(Outlist, encodeFace)
+            faceDis = face_recognition.face_distance(Outlist, encodeFace)
             # print(faceDis)
             matchIndex = np.argmin(faceDis)
-
+            nameFlag = False
             if matches[matchIndex]:
+                nameFlag = True
                 name = Names[matchIndex].upper()
-                # print(name)
+                print(name)
                 y1, x2, y2, x1 = faceLoc
                 # y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 # cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
                 cv2.putText(img, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_SIMPLEX, .7, (255, 255, 255), 2)
                 # markAttendce(name)
+                faceloc1 = faceLoc
             else:
                 name = 'UNKNOWN'
-                # print(name)
+                print(name)
                 y1, x2, y2, x1 = faceLoc
-                y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
+                # y1, x2, y2, x1 = y1 * 4, x2 * 4, y2 * 4, x1 * 4
                 cv2.rectangle(img, (x1, y1), (x2, y2), (0, 255, 0), 2)
                 # cv2.rectangle(img, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
                 cv2.putText(img, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_SIMPLEX, .9, (255, 255, 255), 2)
-            print(faceLoc)
+            if nameFlag:
+                print(faceLoc)
         cv2.imshow('faceRecognition', img)
         if cv2.waitKey(1) & 0xFF == ord('f'):
             break
@@ -88,9 +90,8 @@ def faceRecognition():
 start = time.perf_counter()
 LoadImages()
 print('start encoding... ')
-encodeListKnown = findEncoding(images)
-print(encodeListKnown)
-# EncodingData.txt
+# saved = findEncoding(images)
+
 
 # with open("EncodingData.txt", 'w') as f:
 #     for s in encodeListKnown:
@@ -98,34 +99,37 @@ print(encodeListKnown)
 
 
 # with open("EncodingData.txt", 'r') as f:
-#     saved = [line.rstrip('\n') for line in f]
+#
+#     # saved = [line.rstrip('\n') for line in f ]
+#     i=0
+#     for line in f:
+#         saved[i] = line
+#         if line.endswith(']'):
+#             i=i+1
+#             break
 
-# print(saved)
+import pickle
+
+# To save
+# To write
+
+
+# to read
+with open('your_file.txt', 'rb') as file:
+    Outlist = pickle.load(file)
+
+if len(Names) != len(Outlist):
+    Outlist = findEncoding(images)
+    # #to write
+    with open('your_file.txt', 'wb') as file:
+        pickle.dump(Outlist, file)
+print(len(Names))
+print(len(Outlist))
 
 finish = time.perf_counter()
 print('encoding complete....')
 print(f'Finished in {round(finish - start, 2)} second(s)')
-
-# with concurrent.futures.ThreadPoolExecutor() as executer :
-#     executer.submit(show)
-#     executer.submit(faceRecognition)
-
-
-# # multiprocessing
-# if __name__ == '__main__':
-#     p1 = multiprocessing.Process(target=show)
-#     p2 = multiprocessing.Process(target=faceRecognition)
-#
-#     p1.start()
-#     p2.start()
-#
-#     p1.join()
-#     p2.join()
-#     finish = time.perf_counter()
-#
-#     print(f'Finished in {round(finish - start, 2)} second(s)')
-
-# threading
+# faceRecognition()
 t1 = threading.Thread(target=show)
 t2 = threading.Thread(target=faceRecognition)
 t1.start()
