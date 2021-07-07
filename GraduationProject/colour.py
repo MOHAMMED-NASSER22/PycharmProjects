@@ -15,8 +15,8 @@ while True:
     hsv_frame = cv2.cvtColor(frame, cv2.COLOR_BGR2HSV)  # convert frame from RGB to HSV
 
     # selecting red color
-    low_red = np.array([115, 113, 59])
-    high_red = np.array([145, 201, 144])
+    low_red = np.array([0, 114, 145])
+    high_red = np.array([88, 197, 255])
     # selecting orange color
     low_orange = np.array([0, 174, 152])
     high_orange = np.array([179, 255, 255])
@@ -43,8 +43,8 @@ while True:
     cv2.line(frame, (x_medium, 0), (x_medium, 480), (0, 255, 0), 2)  # create line at the center of rectangular
     cv2.line(frame, (320, 0), (320, 480), (0, 255, 0), 2)  # create line at the center of frame
 
-    # cv2.line(frame, (0, y_medium), (640, y_medium), (0, 255, 0), 2)  # create line at the center of rectangular
-    # cv2.line(frame, (0, 240), (640, 240), (0, 255, 0), 2)  # create line at the center of frame
+    cv2.line(frame, (0, y_medium), (640, y_medium), (0, 255, 0), 2)  # create line at the center of rectangular
+    cv2.line(frame, (0, 240), (640, 240), (0, 255, 0), 2)  # create line at the center of frame
 
     x_destance = 320 - x_medium  # destance from the center of rectangular and the center of frame
     # print("xDestance = ", 320 - x_medium, "pos = ", position)  # testing print

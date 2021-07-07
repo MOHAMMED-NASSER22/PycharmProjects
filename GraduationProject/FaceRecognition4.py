@@ -86,9 +86,12 @@ def faceRecognition():
 
                 for encodeFace, faceLoc in zip(encodesCurFrame, facesCurFrame):
                     matches = face_recognition.compare_faces(Outlist, encodeFace)
+                    # print(matches)
                     faceDis = face_recognition.face_distance(Outlist, encodeFace)
                     # print(faceDis)
                     matchIndex = np.argmin(faceDis)
+                    # print(matchIndex)
+                    print(matches[matchIndex])
                     nameFlag = False  # there is no known face
                     if matches[matchIndex]:
                         nameFlag = True  # there is known face
@@ -104,6 +107,10 @@ def faceRecognition():
                         #             2)  # if i want to print the matches percent %
                         # markAttendce(name)
                         # faceloc1 = faceLoc
+                        # print(faceLoc)
+                        X_Center = (x1 + x2) / 2
+                        Y_Center = (y1 + y2) / 2
+                        print(" X_Center :  " + str(X_Center) + "  Y_Center :  " + str(Y_Center))
                     else:
                         name = 'UNKNOWN'
                         print(name)
@@ -112,11 +119,7 @@ def faceRecognition():
                         cv2.rectangle(imgS, (x1, y1), (x2, y2), (0, 255, 0), 2)
                         # cv2.rectangle(imgS, (x1, y2 - 35), (x2, y2), (0, 255, 0), cv2.FILLED)
                         cv2.putText(imgS, name, (x1 + 6, y2 - 6), cv2.FONT_HERSHEY_SIMPLEX, .9, (255, 255, 255), 2)
-                    if nameFlag:
-                        # print(faceLoc)
-                        X_Center = (x1 + x2) / 2
-                        Y_Center = (y1 + y2) / 2
-                        print(" X_Center :  " + str(X_Center) + "  Y_Center :  " + str(Y_Center))
+
                 cv2.imshow('faceRecognition', imgS)
                 if cv2.waitKey(1) & 0xFF == ord('f'):
                     break
@@ -138,6 +141,7 @@ def finaly():
 
 img, imgS, images, Names, Y_Center, X_Center, path, cap = config()
 Outlist = finaly()
+
 
 # threading
 t1 = threading.Thread(target=LiveFeed)  # Thread 1
