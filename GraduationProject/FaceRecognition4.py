@@ -8,7 +8,7 @@ import time
 
 def config():
     print("reading ImageAt...")
-    path = 'ImageAt'
+    path = 'known'
     images = []
     Names = []
     X_Center = 320
