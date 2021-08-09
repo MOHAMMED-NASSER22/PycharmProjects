@@ -7,7 +7,7 @@ import time
 
 
 def config():
-    print("reading ImageAt...")
+    print("reading known...")
     path = 'known'
     images = []
     Names = []

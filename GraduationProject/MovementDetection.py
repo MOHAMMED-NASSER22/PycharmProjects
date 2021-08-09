@@ -1,8 +1,10 @@
+import time
+
 import cv2
 import numpy as np
 import winsound
 
-
+threshold = 5000
 def stackImages(scale, imgArray):
     rows = len(imgArray)  # setting the rows
     cols = len(imgArray[0])  # setting the colums
@@ -36,6 +38,11 @@ def stackImages(scale, imgArray):
     return ver
 
 cam = cv2.VideoCapture(0)
+_, frame1 = cam.read()
+_, frame2 = cam.read()
+time.sleep(1)
+_, frame1 = cam.read()
+_, frame2 = cam.read()
 
 while cam.isOpened():
     _, frame1 = cam.read()
@@ -51,15 +58,16 @@ while cam.isOpened():
     num = 0
     for c in contours:
         num = num + 1
-        if cv2.contourArea(c) < 5000:
+        if cv2.contourArea(c) < threshold:
             continue
         x, y, w, h = cv2.boundingRect(c)
         cv2.rectangle(frame1, (x, y), (x + w, y + h), (0, 255, 0), 2) #(G, B, R)
         # winsound.Beep(500, 200)
-        # sent notif >> print("   ")
+        print("there is a motion detected")
+        # sent notif
         break
     imgStack = stackImages(.5, ([frame1, diff,gray], [blur, thresh, dilated]))
-    print(num)
+    # print(num)
     if cv2.waitKey(10) == ord('q'):
         break
     # cv2.imshow('frame', diff)
